@@ -1,0 +1,61 @@
+@model IEnumerable<MinhaListaTarefas.Models.Tarefa>
+
+@{
+    ViewData["Title"] = "Minhas Tarefas";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">📋 Minhas Tarefas</h1>
+
+    <a asp-action="Criar" class="btn btn-primary mb-3">
+        ➕ Nova Tarefa
+    </a>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            Nenhuma tarefa encontrada. Comece criando uma!
+        </div>
+    }
+    else
+    {
+        <div class="list-group">
+            @foreach (var tarefa in Model)
+            {
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        @if (tarefa.Concluida)
+                        {
+                            <span class="text-success">✅</span>
+                            <span class="text-muted text-decoration-line-through">
+                                @tarefa.Nome
+                            </span>
+                        }
+                        else
+                        {
+                            <span>⭕</span>
+                            <span>@tarefa.Nome</span>
+                        }
+                        <small class="text-muted ms-2">
+                            (@tarefa.DataCriacao.ToString("dd/MM/yyyy"))
+                        </small>
+                    </div>
+                    <div>
+                        <form asp-action="Concluir" asp-route-id="@tarefa.Id" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-success">
+                                @(tarefa.Concluida ? "Desmarcar" : "Concluir")
+                            </button>
+                        </form>
+
+                        <form asp-action="Excluir" asp-route-id="@tarefa.Id" method="post" class="d-inline"
+                              onsubmit="return confirm('Deseja realmente excluir?');">
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                🗑️ Excluir
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
